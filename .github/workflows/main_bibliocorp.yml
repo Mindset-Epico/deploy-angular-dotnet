@@ -23,7 +23,7 @@ jobs:
           dotnet-version: '7.x'
           
       - name: Restore
-        run: dotnet restore ./BibCorp.sln
+        run: dotnet restore src/BibliotecaCorporativa/backend/BibCorp.sln
 
       - name: Build
         run: dotnet build ./BibCorp.sln --configuration Release --no-restore
