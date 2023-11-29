@@ -28,6 +28,7 @@ jobs:
 
       - name: Build with dotnet
         run: dotnet build BibCorp.sln
+        working-directory: src/BibliotecaCorporativa/backend
 
       - name: Install dependencies
         run: npm install
