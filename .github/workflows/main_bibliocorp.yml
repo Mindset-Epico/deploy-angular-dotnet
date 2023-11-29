@@ -27,7 +27,7 @@ jobs:
         working-directory: src/BibliotecaCorporativa/backend
 
       - name: Build with dotnet
-        run: dotnet build BibCorp.sln
+        run: dotnet build BibCorp.sln --configuration Release
         working-directory: src/BibliotecaCorporativa/backend
 
       - name: Install dependencies
