@@ -26,14 +26,14 @@ jobs:
         run: dotnet restore src/BibliotecaCorporativa/backend/BibCorp.sln
 
       - name: Build
-        run: dotnet build ./BibCorp.sln --configuration Release --no-restore
+        run: dotnet build src/BibliotecaCorporativa/backend/BibCorp.sln --configuration Release --no-restore
 
       - name: Install Dependencies
         run: npm install
         working-directory: src/BibliotecaCorporativa/frontend/BibCorp-app
         
       - name: Publish
-        run: dotnet publish ./BibCorp.sln --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+        run: dotnet publish src/BibliotecaCorporativa/backend/BibCorp.sln --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
         
       - name: Deployment
         uses: azure/webapps-deploy@v2
