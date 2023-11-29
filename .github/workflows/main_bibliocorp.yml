@@ -28,7 +28,7 @@ jobs:
       - name: Build
         run: dotnet build ./BibCorp.sln --configuration Release --no-restore
 
-      - name: Install  frontend dependencies
+      - name: Install Dependencies
         run: npm install
         working-directory: src/BibliotecaCorporativa/frontend/BibCorp-app
         
