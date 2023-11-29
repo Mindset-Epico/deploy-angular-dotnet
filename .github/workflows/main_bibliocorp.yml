@@ -23,19 +23,17 @@ jobs:
           dotnet-version: '7.x'
           
       - name: Install backend dependencies
-        run: dotnet restore
-        working-directory: src/BibliotecaCorporativa/backend
+        run: dotnet restore ./BibCorp.sln
 
       - name: Build
-        run: dotnet build BibCorp.sln --configuration Release --no-restore
-        working-directory: src/BibliotecaCorporativa/backend
+        run: dotnet build ./BibCorp.sln --configuration Release --no-restore
 
       - name: Install  frontend dependencies
         run: npm install
         working-directory: src/BibliotecaCorporativa/frontend/BibCorp-app
         
       - name: Publish
-        run: dotnet publish src/BibliotecaCorporativa/backend/BibCorp.sln --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
+        run: dotnet publish ./BibCorp.sln --configuration Release --no-build --output '${{ env.AZURE_WEBAPP_PACKAGE_PATH }}'
         
       - name: Deployment
         uses: azure/webapps-deploy@v2
