@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BibCorp.Application", "BibC
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BibCorp.Domain", "BibCorp.Domain\BibCorp.Domain.csproj", "{827286FB-B7BF-44D2-99F8-EB84AF678A33}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BibCorp.API", "BibCorp.Api\BibCorp.API.csproj", "{6153F3DF-362B-4EE9-8578-E605A86E4E9F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BibCorp.API", "BibCorp.API\BibCorp.API.csproj", "{6153F3DF-362B-4EE9-8578-E605A86E4E9F}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BibCorp.Persistence", "BibCorp.Persistence\BibCorp.Persistence.csproj", "{3C48118F-371E-4D0C-9C14-4D59FF36E008}"
 EndProject
