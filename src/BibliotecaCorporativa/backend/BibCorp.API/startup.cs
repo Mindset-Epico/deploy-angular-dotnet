@@ -160,16 +160,18 @@ namespace BibiCorp.API
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
       if (env.IsDevelopment())
-      {
-        app.UseDeveloperExceptionPage();
-        app.UseSwagger();
-        app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1"));
-      }
-
+{
+}
+  app.UseDeveloperExceptionPage();
+  app.UseSwagger();
+  app.UseSwaggerUI(c => {
+  c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1");
+                      c.RoutePrefix = string.Empty;
+});
         // app.UseDeveloperExceptionPage();
         // app.UseSwaggerUI();
 
-       app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1"));
+       //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1"));
 
       app.UseHttpsRedirection();
 
