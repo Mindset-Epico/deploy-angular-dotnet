@@ -1,5 +1,6 @@
 using AutoMapper;
 using BibCorp.Application.Dto.Emprestimos;
+using BibCorp.Application.Dtos.Emprestimos;
 using BibCorp.Application.Services.Contracts.Emprestimos;
 using BibCorp.Domain.Exceptions;
 using BibCorp.Domain.Models.Emprestimos;
@@ -44,9 +45,9 @@ namespace BibCorp.Application.Services.Packages.Emprestimos
           {
             var emprestimoRetorno = await _emprestimoPersistence.GetEmprestimoByIdAsync(emprestimo.Id);
 
-            if (await _acervoPersistence.UpdateAcervoAposEmprestimo(emprestimo.AcervoId))
+            if (await _patrimonioPersistence.UpdatePatrimonioAposEmprestimo(emprestimo.PatrimonioId))
             {
-              await _patrimonioPersistence.UpdatePatrimonioAposEmprestimo(emprestimo.PatrimonioId);
+              await _acervoPersistence.UpdateAcervoAposEmprestimo(emprestimo.AcervoId);
             }
 
             return _mapper.Map<EmprestimoDto>(emprestimoRetorno);
@@ -268,6 +269,14 @@ namespace BibCorp.Application.Services.Packages.Emprestimos
 
         var emprestimoAlterado = await _emprestimoPersistence.GerenciarEmprestimos(emprestimoId, gerenciamentoEmprestimo);
 
+        if ( gerenciamentoEmprestimo.Acao == TipoAcaoEmprestimo.Devolver || gerenciamentoEmprestimo.Acao == TipoAcaoEmprestimo.Recusar)
+        {
+          if(await _patrimonioPersistence.UpdatePatrimonioAposDevolucaoOuRecusa(emprestimo.PatrimonioId))
+          {
+            await _acervoPersistence.UpdateAcervoAposDevolucaoOuRecusa(emprestimo.AcervoId);
+          }
+        }
+
         var emprestimoAlteradoMapper = _mapper.Map<EmprestimoDto>(emprestimoAlterado);
 
         return emprestimoAlteradoMapper;
@@ -277,5 +286,26 @@ namespace BibCorp.Application.Services.Packages.Emprestimos
         throw new Exception(e.Message);
       }
     }
+
+    public async Task<IEnumerable<EmprestimoDto>> GetEmprestimosByFiltrosAsync(FiltroEmprestimoDto filtroEmprestimoDto)
+    {
+      try
+      {
+        var filtroEmprestimoMapper = _mapper.Map<FiltroEmprestimo>(filtroEmprestimoDto);
+
+        var emprestimos = await _emprestimoPersistence.GetEmprestimosByFiltrosAsync(filtroEmprestimoMapper);
+
+        if (emprestimos == null) return null;
+
+        var emprestimoMapper = _mapper.Map<EmprestimoDto[]>(emprestimos);
+
+        return emprestimoMapper;
+      }
+      catch (Exception e)
+      {
+        throw new Exception(e.Message);
+      }
+    }
   }
 }
+

@@ -22,9 +22,10 @@ using BibCorp.Persistence.Interfaces.Packages.Usuarios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OnPeople.API.Controllers.Uploads;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -108,7 +109,8 @@ namespace BibiCorp.API
           .AddScoped<IPatrimonioService, PatrimonioService>()
           .AddScoped<IEmprestimoService, EmprestimoService>()
           .AddScoped<IUsuarioService, UsuarioService>()
-          .AddScoped<ITokenService, TokenService>();
+          .AddScoped<ITokenService, TokenService>()
+          .AddScoped<IUploadService, UploadService>();
 
 
       //Injeção das interfaces de Persistencias
@@ -160,11 +162,41 @@ services
           });
 
 
+<<<<<<< HEAD
 // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
 {
   if (env.IsDevelopment())
   {
+=======
+      app.UseHttpsRedirection();
+
+      app.UseRouting();
+
+      app.UseAuthentication();
+      app.UseAuthorization();
+
+      app.UseCors(cors =>
+          cors.AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowAnyOrigin()
+              );
+
+      //Injeção de diretivas para utilização de diretórios
+      app.UseStaticFiles(new StaticFileOptions()
+      {
+        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
+        RequestPath = new PathString("/Resources")
+      });
+
+      app.UseHttpsRedirection();
+
+      app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapControllers();
+      });
+    }
+>>>>>>> 1c4a4aca45483095a0b8b1ab503cfe7432c85ee9
   }
   app.UseDeveloperExceptionPage();
   app.UseSwagger();

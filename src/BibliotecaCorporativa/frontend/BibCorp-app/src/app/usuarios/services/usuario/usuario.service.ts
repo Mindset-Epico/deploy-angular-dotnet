@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, take, map } from 'rxjs';
 import { environment } from 'src/assets/environments/environments';
-import { LoginService, Usuario } from '../..';
+import { LoginService, Usuario, UsuarioUpdate } from '../..';
 
 @Injectable()
 export class UsuarioService {
@@ -33,12 +33,17 @@ export class UsuarioService {
       .pipe(take(1));
   }
 
-  public updateUser(model: Usuario): Observable<void> {
+  public updateUser(model: UsuarioUpdate): Observable<void> {
+    console.log("usuarioService ", model.id)
     return this.http.put<Usuario>(this.baseURL + "UpdateUsuario", model).pipe(
       take(1),
       map((user: Usuario) => {
         this.loginService.setCurrentUser(user);
       })
     );
+  }
+
+  public getAllUsuarios(): Observable<Usuario[]> {
+    return this.http.get<Usuario[]>(this.baseURL + "GetUsuarios").pipe(take(1));
   }
 }
