@@ -30,7 +30,7 @@ jobs:
 
       - name: BD
         run: dotnet ef database update -s BibCorp.API
-        working-directory: src/BibliotecaCorporativa/backend/
+        working-directory: src/BibliotecaCorporativa/backend/BibCorp.API/
 
       - name: Install Dependencies
         run: npm install
