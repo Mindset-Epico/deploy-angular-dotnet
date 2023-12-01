@@ -35,11 +35,9 @@ namespace BibCorp.API
 {
   public class Startup
   {
-    private IApplicationEnvironment _appEnv;
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
-      _appEnv = appEnv;
     }
 
     public IConfiguration Configuration { get; }
@@ -48,18 +46,14 @@ namespace BibCorp.API
     public void ConfigureServices(IServiceCollection services)
     {
       // Injeção do DBCONTEXT no projeto
-      // services
-      //   .AddDbContext<BibCorpContext>(
-      //     context =>
-      //     {
-      //       context.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-      //       context.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-      //     }
-      // );
-      services.AddEntityFramework()
-            .AddSqlite()
-            .AddDbContext<BibCorpContext>(
-                options => { options.UseSqlite($"Data Source={_appEnv.ApplicationBasePath}/BibCorpDB.db"); });
+      services
+        .AddDbContext<BibCorpContext>(
+          context =>
+          {
+            context.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            context.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+          }
+      );
 
       // Injeção Identity
       services
