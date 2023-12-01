@@ -25,6 +25,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+//using BibCorp.API.Controllers.Uploads;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -105,7 +106,7 @@ namespace BibiCorp.API
           .AddScoped<IEmprestimoService, EmprestimoService>()
           .AddScoped<IUsuarioService, UsuarioService>()
           .AddScoped<ITokenService, TokenService>()
-          .AddScoped<IUploadService, UploadService>();
+          //.AddScoped<IUploadService, UploadService>();
 
 
       //Injeção das interfaces de Persistencias
