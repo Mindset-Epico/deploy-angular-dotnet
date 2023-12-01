@@ -22,10 +22,9 @@ using BibCorp.Persistence.Interfaces.Packages.Usuarios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.FileProviders;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-//using BibCorp.API.Controllers.Uploads;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -45,7 +44,8 @@ namespace BibiCorp.API
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      // Injeção do DBCONTEXT no projeto
+      //Injeção do DBCONTEXT no projeto
+
       services
         .AddDbContext<BibCorpContext>(
           context =>
@@ -55,9 +55,12 @@ namespace BibiCorp.API
           }
       );
 
-      // Injeção Identity
-      services
-        .AddIdentityCore<Usuario>(options =>
+    }
+
+
+    // Injeção Identity
+    services
+      .AddIdentityCore<Usuario>(options =>
           {
             options.Password.RequireDigit = false;
             options.Password.RequireNonAlphanumeric = false;
@@ -72,19 +75,19 @@ namespace BibiCorp.API
         .AddEntityFrameworkStores<BibCorpContext>()
         .AddDefaultTokenProviders();
 
-      //Injeção de autenticação
-      services
-        .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+  //Injeção de autenticação
+  services
+    .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
           {
-            options.TokenValidationParameters = new TokenValidationParameters
-            {
-              ValidateIssuerSigningKey = true,
-              IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])),
-              ValidateIssuer = false,
-              ValidateAudience = false
-            };
-          });
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+      ValidateIssuerSigningKey = true,
+      IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["TokenKey"])),
+      ValidateIssuer = false,
+      ValidateAudience = false
+    };
+  });
 
       //Injeção das controllers
       services
@@ -96,8 +99,8 @@ namespace BibiCorp.API
           // Eliminar loop infinito da estrutura
           .AddNewtonsoftJson(options => options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore);
 
-      //InjeÇão do mapeamento automático de campos (DTO)
-      services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+  //InjeÇão do mapeamento automático de campos (DTO)
+  services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
       //Injeção dos serviços de persistencias
       services
@@ -106,7 +109,6 @@ namespace BibiCorp.API
           .AddScoped<IEmprestimoService, EmprestimoService>()
           .AddScoped<IUsuarioService, UsuarioService>()
           .AddScoped<ITokenService, TokenService>();
-          //.AddScoped<IUploadService, UploadService>();
 
 
       //Injeção das interfaces de Persistencias
@@ -122,26 +124,26 @@ namespace BibiCorp.API
         x.PrazoRenovacao = Convert.ToInt32(Configuration["prazoRenovacao"]);
       });
 
-      services
-                .AddSwaggerGen(options =>
-                {
-                  options.SwaggerDoc("v1", new OpenApiInfo { Title = "BibCorp.API", Version = "v1", Description = "API responsável por implementar as funcionalidades de backend da biblioteca corporativa da empress Prevenir" });
+services
+          .AddSwaggerGen(options =>
+          {
+            options.SwaggerDoc("v1", new OpenApiInfo { Title = "BibCorp.API", Version = "v1", Description = "API responsável por implementar as funcionalidades de backend da biblioteca corporativa da empress Prevenir" });
 
-                  var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                  var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                  options.IncludeXmlComments(xmlPath);
+            var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+            var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
+            options.IncludeXmlComments(xmlPath);
 
-                  options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
-                  {
-                    Description = @"JWT Authorization header usando Beares. Entre com 'Bearer [espaço] em seguida coloque seu token.
+            options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+            {
+              Description = @"JWT Authorization header usando Beares. Entre com 'Bearer [espaço] em seguida coloque seu token.
                                         Exemplo: 'Bearer 12345abcdef'",
-                    Name = "Authorization",
-                    In = ParameterLocation.Header,
-                    Type = SecuritySchemeType.ApiKey,
-                    Scheme = "Bearer"
-                  });
-                  options.AddSecurityRequirement(new OpenApiSecurityRequirement()
-                    {
+              Name = "Authorization",
+              In = ParameterLocation.Header,
+              Type = SecuritySchemeType.ApiKey,
+              Scheme = "Bearer"
+            });
+            options.AddSecurityRequirement(new OpenApiSecurityRequirement()
+              {
                         {
                             new OpenApiSecurityScheme {
                                 Reference = new OpenApiReference {
@@ -154,51 +156,47 @@ namespace BibiCorp.API
                             },
                             new List<string>()
                         }
-                    });
-                });
-    }
+              });
+          });
 
-    // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-    {
-      // if (env.IsDevelopment())
-      // {
-      //   app.UseDeveloperExceptionPage();
-      //   app.UseSwagger();
-      // }
-      app.UseDeveloperExceptionPage();
-      app.UseSwagger();
-      app.UseSwaggerUI(c => {
-      c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1");
-                      c.RoutePrefix = string.Empty;
-      });
 
-      app.UseHttpsRedirection();
-
-      app.UseRouting();
-
-      app.UseAuthentication();
-      app.UseAuthorization();
-
-      app.UseCors(cors =>
-          cors.AllowAnyHeader()
-              .AllowAnyMethod()
-              .AllowAnyOrigin()
-              );
-
-      //Injeção de diretivas para utilização de diretórios
-      app.UseStaticFiles(new StaticFileOptions()
-      {
-        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
-        RequestPath = new PathString("/Resources")
-      });
-
-      app.UseHttpsRedirection();
-
-      app.UseEndpoints(endpoints =>
-      {
-        endpoints.MapControllers();
-      });
-    }
+// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+{
+  if (env.IsDevelopment())
+  {
   }
+  app.UseDeveloperExceptionPage();
+  app.UseSwagger();
+  app.UseSwaggerUI(c =>
+  {
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1");
+    c.RoutePrefix = string.Empty;
+  });
+  // app.UseDeveloperExceptionPage();
+  // app.UseSwaggerUI();
+
+  //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1"));
+
+  app.UseHttpsRedirection();
+
+  app.UseRouting();
+
+  app.UseAuthentication();
+  app.UseAuthorization();
+
+  app.UseCors(cors =>
+      cors.AllowAnyHeader()
+          .AllowAnyMethod()
+          .AllowAnyOrigin()
+          );
+
+  app.UseHttpsRedirection();
+
+  app.UseEndpoints(endpoints =>
+  {
+    endpoints.MapControllers();
+  });
+}
+}
 }
