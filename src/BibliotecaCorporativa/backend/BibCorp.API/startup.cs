@@ -22,9 +22,10 @@ using BibCorp.Persistence.Interfaces.Packages.Usuarios;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using OnPeople.API.Controllers.Uploads;
 using System.Reflection;
 using System.Text;
 using System.Text.Json.Serialization;
@@ -44,8 +45,7 @@ namespace BibiCorp.API
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      //Injeção do DBCONTEXT no projeto
-
+      // Injeção do DBCONTEXT no projeto
       services
         .AddDbContext<BibCorpContext>(
           context =>
@@ -54,9 +54,6 @@ namespace BibiCorp.API
             context.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
           }
       );
-
-    }
-
 
       // Injeção Identity
       services
@@ -108,7 +105,8 @@ namespace BibiCorp.API
           .AddScoped<IPatrimonioService, PatrimonioService>()
           .AddScoped<IEmprestimoService, EmprestimoService>()
           .AddScoped<IUsuarioService, UsuarioService>()
-          .AddScoped<ITokenService, TokenService>();
+          .AddScoped<ITokenService, TokenService>()
+          .AddScoped<IUploadService, UploadService>();
 
 
       //Injeção das interfaces de Persistencias
@@ -158,24 +156,22 @@ namespace BibiCorp.API
                         }
                     });
                 });
-
+    }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
-      if (env.IsDevelopment())
-{
-}
-  app.UseDeveloperExceptionPage();
-  app.UseSwagger();
-  app.UseSwaggerUI(c => {
-  c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1");
+      // if (env.IsDevelopment())
+      // {
+      //   app.UseDeveloperExceptionPage();
+      //   app.UseSwagger();
+      // }
+      app.UseDeveloperExceptionPage();
+      app.UseSwagger();
+      app.UseSwaggerUI(c => {
+      c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1");
                       c.RoutePrefix = string.Empty;
-});
-        // app.UseDeveloperExceptionPage();
-        // app.UseSwaggerUI();
-
-       //app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BibCorp.API v1"));
+      });
 
       app.UseHttpsRedirection();
 
@@ -190,6 +186,13 @@ namespace BibiCorp.API
               .AllowAnyOrigin()
               );
 
+      //Injeção de diretivas para utilização de diretórios
+      app.UseStaticFiles(new StaticFileOptions()
+      {
+        FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Resources")),
+        RequestPath = new PathString("/Resources")
+      });
+
       app.UseHttpsRedirection();
 
       app.UseEndpoints(endpoints =>
@@ -197,5 +200,5 @@ namespace BibiCorp.API
         endpoints.MapControllers();
       });
     }
-}
+  }
 }
