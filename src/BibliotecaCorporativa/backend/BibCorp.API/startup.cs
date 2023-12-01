@@ -31,7 +31,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 
 
-namespace BibiCorp.API
+namespace BibCorp.API
 {
   public class Startup
   {

@@ -1,5 +1,5 @@
 
-using BibiCorp.API;
+using BibCorp.API;
 
 namespace BibCorp.API
 {
