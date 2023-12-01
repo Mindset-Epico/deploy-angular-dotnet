@@ -1,4 +1,4 @@
 export const environment = {
-  apiURL: 'http://localhost:5283/api/',
-  fotoURL: 'http://localhost:5283/resources/fotos/'
+  apiURL: 'https://bibliocorp.azurewebsites.net//api/',
+  fotoURL: 'https://bibliocorp.azurewebsites.net//resources/fotos/'
 }
