@@ -56,7 +56,7 @@ namespace BibiCorp.API
       );
 
     }
-}
+
 
       // Injeção Identity
       services
@@ -197,4 +197,5 @@ namespace BibiCorp.API
         endpoints.MapControllers();
       });
     }
+}
 }
