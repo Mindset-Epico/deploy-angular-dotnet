@@ -44,19 +44,19 @@ namespace BibiCorp.API
     // This method gets called by the runtime. Use this method to add services to the container.
     public void ConfigureServices(IServiceCollection services)
     {
-      // Injeção do DBCONTEXT no projeto
-      // services
-      //   .AddDbContext<BibCorpContext>(
-      //     context =>
-      //     {
-      //       context.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-      //       context.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-      //     }
-      // );
-      services.AddEntityFramework()
-            .AddSqlite()
-            .AddDbContext<BibCorpContext>(
-                options => { options.UseSqlite($"Data Source={_appEnv.ApplicationBasePath}/BibCorpDB.db"); });
+      Injeção do DBCONTEXT no projeto
+      services
+        .AddDbContext<BibCorpContext>(
+          context =>
+          {
+            context.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+            context.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+          }
+      );
+      // services.AddEntityFramework()
+      //       .AddSqlite()
+      //       .AddDbContext<BibCorpContext>(
+      //           options => { options.UseSqlite($"Data Source={_appEnv.ApplicationBasePath}/BibCorpDB.db"); });
     }
 }
 
