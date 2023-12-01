@@ -105,7 +105,7 @@ namespace BibiCorp.API
           .AddScoped<IPatrimonioService, PatrimonioService>()
           .AddScoped<IEmprestimoService, EmprestimoService>()
           .AddScoped<IUsuarioService, UsuarioService>()
-          .AddScoped<ITokenService, TokenService>()
+          .AddScoped<ITokenService, TokenService>();
           //.AddScoped<IUploadService, UploadService>();
 
 
