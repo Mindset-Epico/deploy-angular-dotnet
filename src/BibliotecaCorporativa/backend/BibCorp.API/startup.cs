@@ -45,14 +45,20 @@ namespace BibiCorp.API
     public void ConfigureServices(IServiceCollection services)
     {
       // Injeção do DBCONTEXT no projeto
-      services
-        .AddDbContext<BibCorpContext>(
-          context =>
-          {
-            context.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
-            context.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
-          }
-      );
+      // services
+      //   .AddDbContext<BibCorpContext>(
+      //     context =>
+      //     {
+      //       context.UseSqlite(Configuration.GetConnectionString("DefaultConnection"));
+      //       context.UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+      //     }
+      // );
+      services.AddEntityFramework()
+            .AddSqlite()
+            .AddDbContext<BibCorpContext>(
+                options => { options.UseSqlite($"Data Source={_appEnv.ApplicationBasePath}/BibCorpDB.db"); });
+    }
+}
 
       // Injeção Identity
       services
